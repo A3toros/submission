@@ -1,40 +1,42 @@
 const { neon } = require('@neondatabase/serverless');
 
-// Timeout after 8 seconds (Netlify's max is 10s)
-const TIMEOUT = 8000;
-
 exports.handler = async (event) => {
-  // Set timeout promise
-  const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error('Function timeout')), TIMEOUT);
-  });
-
+  console.log('Received submission request');
+  
   try {
     const data = JSON.parse(event.body);
+    console.log('Form data:', JSON.stringify(data, null, 2));
     
+    // Validate name exists
+    if (!data.name || data.name.trim() === '') {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Name is required' })
+      };
+    }
+
     // Validate at least one question exists
-    const questionsExist = [
+    const questions = [
       data.general,
       data.vocabulary,
       data.grammar,
       data.spelling,
       data.fun
-    ].some(val => val && val.trim() !== '');
-
-    if (!questionsExist) {
+    ];
+    
+    const hasQuestions = questions.some(q => q && q.trim() !== '');
+    if (!hasQuestions) {
       return {
         statusCode: 400,
-        body: 'At least one question must be filled'
+        body: JSON.stringify({ error: 'At least one question must be filled' })
       };
     }
 
-    // Create Neon connection with timeout
-    const sql = neon(process.env.DATABASE_URL, {
-      connectionTimeoutMillis: 5000
-    });
+    console.log('Connecting to NeonDB');
+    const sql = neon(process.env.DATABASE_URL);
     
-    // Run database query with timeout
-    const dbPromise = sql`
+    console.log('Executing SQL query');
+    const result = await sql`
       INSERT INTO submissions (
         name, 
         general_knowledge, 
@@ -43,27 +45,38 @@ exports.handler = async (event) => {
         spelling, 
         fun_questions
       ) VALUES (
-        ${data.name},
-        ${data.general || null},
-        ${data.vocabulary || null},
-        ${data.grammar || null},
-        ${data.spelling || null},
-        ${data.fun || null}
+        ${data.name.trim()},
+        ${data.general?.trim() || null},
+        ${data.vocabulary?.trim() || null},
+        ${data.grammar?.trim() || null},
+        ${data.spelling?.trim() || null},
+        ${data.fun?.trim() || null}
       )
+      RETURNING id
     `;
-
-    // Race between database query and timeout
-    await Promise.race([dbPromise, timeoutPromise]);
-
+    
+    console.log('Insert successful. ID:', result[0].id);
+    
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Submission successful' })
     };
   } catch (error) {
-    console.error('SUBMISSION ERROR:', error);
+    console.error('FULL ERROR:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+      name: error.name
+    });
+    
     return {
       statusCode: 500,
-      body: `Error: ${error.message}`
+      body: JSON.stringify({ 
+        error: 'Database operation failed',
+        message: error.message,
+        code: error.code
+      })
     };
   }
 };
