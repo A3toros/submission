@@ -27,32 +27,34 @@ document.addEventListener('DOMContentLoaded', () => {
       
       clearTimeout(timeoutId);
       
-      const responseData = await response.json();
+      // Parse response as JSON
+      const result = await response.json();
       
       if (response.ok) {
         form.style.display = 'none';
         thankYou.style.display = 'block';
       } else {
-        showError(`Server error: ${responseData.error || response.statusText}\nDetails: ${responseData.message || 'No details'}`);
+        showError(result.error || 'Unknown error');
       }
     } catch (error) {
       if (error.name === 'AbortError') {
         showError('Request timed out. Please try again.');
+      } else if (error instanceof SyntaxError) {
+        showError('Invalid server response');
       } else {
         showError(`Network error: ${error.message}`);
       }
-      console.error('Submission error:', error);
     }
   });
   
   function showError(message) {
-    // Create or update error display
+    // Create error display element if it doesn't exist
     let errorDiv = document.getElementById('error-message');
     if (!errorDiv) {
       errorDiv = document.createElement('div');
       errorDiv.id = 'error-message';
       errorDiv.style.color = 'red';
-      errorDiv.style.marginTop = '20px';
+      errorDiv.style.margin = '20px 0';
       errorDiv.style.padding = '10px';
       errorDiv.style.border = '1px solid red';
       form.parentNode.insertBefore(errorDiv, form.nextSibling);
