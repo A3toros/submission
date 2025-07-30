@@ -2,7 +2,7 @@ const { Client } = require('pg');
 
 exports.handler = async () => {
   const client = new Client({
-    connectionString: process.env.NEON_DB_URL,
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
   });
 
