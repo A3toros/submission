@@ -1,3 +1,4 @@
+const { Client } = require('pg');
 exports.handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
