@@ -1,88 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Question Submission</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #thank-you {
-      display: none;
-      font-size: 1.5em;
-      color: green;
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Portal | NeonDB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(0, 10, 20, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            background: rgba(0, 30, 60, 0.9);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 2px solid #00c6ff;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .neon-highlight {
+            color: #00c6ff;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-container {
+            background: rgba(0, 20, 40, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 198, 255, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #00c6ff;
+            font-weight: 500;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 10, 20, 0.8);
+            border: 1px solid rgba(0, 198, 255, 0.4);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00c6ff;
+            box-shadow: 0 0 15px rgba(0, 198, 255, 0.5);
+        }
+        
+        .question-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .category {
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(0, 198, 255, 0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+            border-color: #00c6ff;
+        }
+        
+        .category h3 {
+            margin-bottom: 15px;
+            color: #00c6ff;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 40px auto 0;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .thank-you {
+            text-align: center;
+            padding: 60px 30px;
+            display: none;
+        }
+        
+        .thank-you h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #00c6ff;
+        }
+        
+        .thank-you p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .database-info {
+            background: rgba(0, 20, 40, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(0, 198, 255, 0.3);
+        }
+        
+        .database-info h3 {
+            color: #00c6ff;
+            margin-bottom: 15px;
+        }
+        
+        .database-info p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 10, 20, 0.9);
+            border-top: 1px solid rgba(0, 198, 255, 0.2);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .question-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Submit Your Questions</h1>
-  
-  <form id="submission-form">
-    <div class="form-group">
-      <label for="name">Name:*</label>
-      <input type="text" id="name" name="name" required>
+    <div class="container">
+        <header>
+            <h1>NeonDB Question Portal</h1>
+            <p class="subtitle">Submit your questions in various categories. All data is securely stored in our <span class="neon-highlight">NeonDB database</span>.</p>
+        </header>
+        
+        <div class="content">
+            <div class="form-container" id="formContainer">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="your-questions">Your Questions</label>
+                    <textarea id="your-questions" rows="3" placeholder="Ask anything you'd like to know..."></textarea>
+                </div>
+                
+                <h2 style="text-align: center; margin: 30px 0; color: #00c6ff;">Question Categories</h2>
+                
+                <div class="question-categories">
+                    <div class="category">
+                        <h3>General Knowledge</h3>
+                        <textarea id="general-knowledge" rows="4" placeholder="Your general knowledge questions..."></textarea>
+                    </div>
+                    
+                    <div class="category">
+                        <h3>Vocabulary</h3>
+                        <textarea id="vocabulary" rows="4" placeholder="Questions about word meanings, usage, etc..."></textarea>
+                    </div>
+                    
+                    <div class="category">
+                        <h3>Grammar</h3>
+                        <textarea id="grammar" rows="4" placeholder="Questions about sentence structure, tenses, etc..."></textarea>
+                    </div>
+                    
+                    <div class="category">
+                        <h3>Spelling</h3>
+                        <textarea id="spelling" rows="4" placeholder="Spelling challenges or questions..."></textarea>
+                    </div>
+                    
+                    <div class="category">
+                        <h3>Fun Questions</h3>
+                        <textarea id="fun-questions" rows="4" placeholder="Puzzles, riddles, or anything fun..."></textarea>
+                    </div>
+                </div>
+                
+                <button class="btn" id="submitBtn">Submit Questions</button>
+            </div>
+            
+            <div class="thank-you" id="thankYouMessage">
+                <h2>Thank You For Your Submission!</h2>
+                <p>Your questions have been successfully stored in our NeonDB database. We'll review them and may feature some in our upcoming content.</p>
+                <p>You can close this page or submit another set of questions by refreshing the page.</p>
+            </div>
+            
+            <div class="database-info">
+                <h3>About NeonDB Storage</h3>
+                <p>All submitted data is securely stored in our NeonDB database. NeonDB provides serverless PostgreSQL with instant scalability, perfect for applications like this question portal.</p>
+                <p>Your information is protected with enterprise-grade security and automatic backups.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 NeonDB Question Portal | All submissions are stored in our secure NeonDB database</p>
+        </footer>
     </div>
-    
-    <h3>Your questions</h3>
-    
-    <div class="form-group">
-      <label for="general">General Knowledge:</label>
-      <textarea id="general" name="general"></textarea>
-    </div>
-    
-    <div class="form-group">
-      <label for="vocabulary">Vocabulary:</label>
-      <textarea id="vocabulary" name="vocabulary"></textarea>
-    </div>
-    
-    <div class="form-group">
-      <label for="grammar">Grammar:</label>
-      <textarea id="grammar" name="grammar"></textarea>
-    </div>
-    
-    <div class="form-group">
-      <label for="spelling">Spelling:</label>
-      <textarea id="spelling" name="spelling"></textarea>
-    </div>
-    
-    <div class="form-group">
-      <label for="fun">Fun Questions:</label>
-      <textarea id="fun" name="fun"></textarea>
-    </div>
-    
-    <button type="submit">Submit</button>
-  </form>
-  
-  <div id="thank-you">Thank you for submission</div>
-  
-  <script src="/script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
