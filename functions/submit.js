@@ -1,3 +1,4 @@
+console.log("Incoming data:", data);
 const { Client } = require('pg');
 
 exports.handler = async (event) => {
@@ -29,7 +30,7 @@ exports.handler = async (event) => {
   }
 
   const client = new Client({
-    connectionString: process.env.NEON_DB_URL,
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
   });
 
@@ -72,6 +73,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Data saved successfully' }),
     };
   } catch (err) {
+    console.error("Database error:", err);
     console.error(err);
     return {
       statusCode: 500,
