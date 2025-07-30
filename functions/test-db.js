@@ -1,39 +1,25 @@
-const { Pool } = require('pg');
+const { Client } = require('pg');
 
-exports.handler = async (event, context) => {
-    // Create a connection pool to NeonDB
-    const pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false
-        }
-    });
+exports.handler = async () => {
+  const client = new Client({
+    connectionString: process.env.NEON_DB_URL,
+    ssl: { rejectUnauthorized: false },
+  });
 
-    try {
-        // Connect to the database
-        const client = await pool.connect();
-
-        // Test the connection
-        const result = await client.query('SELECT NOW() as current_time');
-
-        // Release the client back to the pool
-        client.release();
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ 
-                message: 'Database connection successful',
-                current_time: result.rows[0].current_time 
-            })
-        };
-    } catch (error) {
-        console.error('Database error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Database connection failed' })
-        };
-    } finally {
-        // End the pool
-        await pool.end();
-    }
+  try {
+    await client.connect();
+    const res = await client.query('SELECT NOW()');
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ time: res.rows[0].now }),
+    };
+  } catch (err) {
+    console.error(err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Database connection failed' }),
+    };
+  } finally {
+    await client.end();
+  }
 };

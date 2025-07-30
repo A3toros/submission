@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Portal | NeonDB</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Question Submission</title>
+</head>
     <style>
         * {
             margin: 0;
@@ -220,76 +221,39 @@
             }
         }
     </style>
-</head>
 <body>
-    <div class="container">
-        <header>
-            <h1>NeonDB Question Portal</h1>
-            <p class="subtitle">Submit your questions in various categories. All data is securely stored in our <span class="neon-highlight">NeonDB database</span>.</p>
-        </header>
-        
-        <div class="content">
-            <div class="form-container" id="formContainer">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" placeholder="Enter your name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="your-questions">Your Questions</label>
-                    <textarea id="your-questions" rows="3" placeholder="Ask anything you'd like to know..."></textarea>
-                </div>
-                
-                <h2 style="text-align: center; margin: 30px 0; color: #00c6ff;">Question Categories</h2>
-                
-                <div class="question-categories">
-                    <div class="category">
-                        <h3>General Knowledge</h3>
-                        <textarea id="general-knowledge" rows="4" placeholder="Your general knowledge questions..."></textarea>
-                    </div>
-                    
-                    <div class="category">
-                        <h3>Vocabulary</h3>
-                        <textarea id="vocabulary" rows="4" placeholder="Questions about word meanings, usage, etc..."></textarea>
-                    </div>
-                    
-                    <div class="category">
-                        <h3>Grammar</h3>
-                        <textarea id="grammar" rows="4" placeholder="Questions about sentence structure, tenses, etc..."></textarea>
-                    </div>
-                    
-                    <div class="category">
-                        <h3>Spelling</h3>
-                        <textarea id="spelling" rows="4" placeholder="Spelling challenges or questions..."></textarea>
-                    </div>
-                    
-                    <div class="category">
-                        <h3>Fun Questions</h3>
-                        <textarea id="fun-questions" rows="4" placeholder="Puzzles, riddles, or anything fun..."></textarea>
-                    </div>
-                </div>
-                
-                <button class="btn" id="submitBtn">Submit Questions</button>
-            </div>
-            
-            <div class="thank-you" id="thankYouMessage">
-                <h2>Thank You For Your Submission!</h2>
-                <p>Your questions have been successfully stored in our NeonDB database. We'll review them and may feature some in our upcoming content.</p>
-                <p>You can close this page or submit another set of questions by refreshing the page.</p>
-            </div>
-            
-            <div class="database-info">
-                <h3>About NeonDB Storage</h3>
-                <p>All submitted data is securely stored in our NeonDB database. NeonDB provides serverless PostgreSQL with instant scalability, perfect for applications like this question portal.</p>
-                <p>Your information is protected with enterprise-grade security and automatic backups.</p>
-            </div>
-        </div>
-        
-        <footer>
-            <p>© 2023 NeonDB Question Portal | All submissions are stored in our secure NeonDB database</p>
-        </footer>
-    </div>
+  <div id="formContainer">
+    <h2>Submit Your Questions</h2>
+    <form>
+      <label for="name">Name (required):</label><br />
+      <input type="text" id="name" required /><br /><br />
 
-    <script src="script.js"></script>
+      <label for="your-questions">Your Questions:</label><br />
+      <textarea id="your-questions"></textarea><br /><br />
+
+      <label for="general-knowledge">General Knowledge:</label><br />
+      <textarea id="general-knowledge"></textarea><br /><br />
+
+      <label for="vocabulary">Vocabulary:</label><br />
+      <textarea id="vocabulary"></textarea><br /><br />
+
+      <label for="grammar">Grammar:</label><br />
+      <textarea id="grammar"></textarea><br /><br />
+
+      <label for="spelling">Spelling:</label><br />
+      <textarea id="spelling"></textarea><br /><br />
+
+      <label for="fun-questions">Fun Questions:</label><br />
+      <textarea id="fun-questions"></textarea><br /><br />
+
+      <button id="submitBtn">Submit</button>
+    </form>
+  </div>
+
+  <div id="thankYouMessage" style="display: none;">
+    <h3>Thank you for submission!</h3>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
